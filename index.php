@@ -1,18 +1,14 @@
 <?php
-// Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Assainir les données reçues
+
     $nom = cleanInput($_POST["nom"]);
     $prenom = cleanInput($_POST["prenom"]);
     $email = cleanInput($_POST["email"]);
     $description = cleanInput($_POST["description"]);
 
-    // Valider les données
     $errors = validateForm($nom, $prenom, $email, $_FILES["deposer"], $description);
 
-    // S'il n'y a pas d'erreur, envoyer la réponse à l'utilisateur
     if (count($errors) === 0) {
-        // Envoyer l'e-mail de réponse
         $to = "support@hackerspoulette.com";
         $subject = "Demande de support";
         $message = "Nom: $nom\n";
@@ -27,14 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Désolé, une erreur s'est produite lors de l'envoi de votre demande. Veuillez réessayer plus tard.";
         }
     } else {
-        // Afficher les erreurs
         foreach ($errors as $error) {
             echo "$error<br>";
         }
     }
 }
 
-// Fonction pour assainir les données d'entrée
 function cleanInput($data)
 {
     $data = trim($data);
@@ -43,7 +37,6 @@ function cleanInput($data)
     return $data;
 }
 
-// Fonction pour valider les données du formulaire
 function validateForm($nom, $prenom, $email, $file, $description)
 {
     $errors = array();
