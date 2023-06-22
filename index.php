@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Erreur de connexion à la base de données : " . $e->getMessage();
         }
 
-        $sql = "SELECT * FROM formulaire";
+        $sql = "INSERT INTO formulaire (nom, prenom, email, description) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
 
         try {
@@ -89,17 +89,12 @@ function validateForm($nom, $prenom, $email, $file, $description)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hackers Poulette</title>
     <link rel="stylesheet" href="./assets/css/style.css">
-    <style>
-        .error {
-            color: red;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Hackers Poulette</h1>
+    <h1>Contact</h1>
 
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?t=<?php echo time(); ?>" enctype="multipart/form-data">
         <label for="nom">Nom:</label>
         <input type="text" id="nom" name="nom" required>
         <?php if (isset($errors['nom'])) : ?>
@@ -130,9 +125,11 @@ function validateForm($nom, $prenom, $email, $file, $description)
 
         <label for="description">Description:</label>
         <textarea id="description" name="description" rows="5" cols="40" required></textarea>
+
         <?php if (isset($errors['description'])) : ?>
             <span class="error"><?php echo $errors['description']; ?></span>
         <?php endif; ?>
+
         <br>
 
         <input type="submit" value="Envoyer">
